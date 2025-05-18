@@ -330,7 +330,9 @@ class NYCScraper:
             for article in substack_articles:
                 markdown_content.append(f"\n### {article['title']}")
                 if article.get('published_date'):
-                    markdown_content.append(f"- **Published:** {article['published_date'].split('T')[0]}")
+                    # Format published date as YYYY-MM-DD
+                    pub_date = article['published_date'].split('T')[0]
+                    markdown_content.append(f"- **Published:** {pub_date}")
                 if article.get('url'):
                     markdown_content.append(f"- **URL:** [Read the article]({article['url']})")
                 
@@ -341,7 +343,7 @@ class NYCScraper:
                     
                     for event in article['extracted_events']:
                         title = event.get('title', 'N/A')
-                        date_time = event.get('date_time', 'N/A')
+                        date_time = event.get('date_time', 'TBD')
                         location = event.get('location', 'N/A')
                         price = event.get('price', 'N/A')
                         category = event.get('category', 'N/A')
@@ -350,7 +352,7 @@ class NYCScraper:
                     markdown_content.append("\n**Event Descriptions:**")
                     for event in article['extracted_events']:
                         title = event.get('title', 'N/A')
-                        date_time = event.get('date_time', 'N/A')
+                        date_time = event.get('date_time', 'TBD')
                         location = event.get('location', 'N/A')
                         description = event.get('description', 'N/A')
                         markdown_content.append(f"- **{title}** ({date_time}, {location}): {description}")
@@ -363,7 +365,9 @@ class NYCScraper:
             for article in blog_articles:
                 markdown_content.append(f"\n### {article['title']}")
                 if article.get('published_date'):
-                    markdown_content.append(f"- **Published:** {article['published_date'].split('T')[0]}")
+                    # Format published date as YYYY-MM-DD
+                    pub_date = article['published_date'].split('T')[0]
+                    markdown_content.append(f"- **Published:** {pub_date}")
                 if article.get('url'):
                     markdown_content.append(f"- **URL:** [Read the article]({article['url']})")
                 
@@ -374,7 +378,7 @@ class NYCScraper:
                     
                     for event in article['extracted_events']:
                         title = event.get('title', 'N/A')
-                        date_time = event.get('date_time', 'N/A')
+                        date_time = event.get('date_time', 'TBD')
                         location = event.get('location', 'N/A')
                         price = event.get('price', 'N/A')
                         category = event.get('category', 'N/A')
@@ -383,7 +387,7 @@ class NYCScraper:
                     markdown_content.append("\n**Event Descriptions:**")
                     for event in article['extracted_events']:
                         title = event.get('title', 'N/A')
-                        date_time = event.get('date_time', 'N/A')
+                        date_time = event.get('date_time', 'TBD')
                         location = event.get('location', 'N/A')
                         description = event.get('description', 'N/A')
                         markdown_content.append(f"- **{title}** ({date_time}, {location}): {description}")
@@ -409,7 +413,7 @@ class NYCScraper:
                 messages=[
                     {"role": "system", "content": """Extract all events from the content and return them as a JSON array. Each event should have:
                     - title: The event title
-                    - date_time: The event date and time (in ISO format if possible)
+                    - date_time: The event date and time in YYYY-MM-DD format (infer from article content, not from article publish date)
                     - location: The event location
                     - description: A brief description of the event
                     - price: The event price (if available)
@@ -418,9 +422,15 @@ class NYCScraper:
                     Clean up the data:
                     - Remove any special characters from titles
                     - Standardize location format to include neighborhood/area
-                    - Convert relative dates to actual dates
+                    - Convert relative dates to actual dates (e.g. 'this weekend' -> YYYY-MM-DD)
                     - Format prices consistently
-                    - Categorize events appropriately"""},
+                    - Categorize events appropriately
+                    
+                    For dates:
+                    - Use YYYY-MM-DD format
+                    - If time is available, append it after the date (YYYY-MM-DD HH:MMam/pm)
+                    - If only a date range is given, use the start date
+                    - If no specific date is found, use 'TBD'"""},
                     {"role": "user", "content": content}
                 ],
                 temperature=0.7
