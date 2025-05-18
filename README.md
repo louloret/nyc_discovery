@@ -1,72 +1,55 @@
-# NYC Discovery Agent
+# NYC Discovery
 
-A smart agent that discovers and curates unique NYC experiences by analyzing various data sources and generating personalized recommendations.
+A collection of scripts to discover and aggregate upcoming events in NYC from various sources.
 
-## Features
+## Scripts
 
-- **Data Collection**: Scrapes posts and events from Reddit, Instagram, Eventbrite, and other sources
-- **Content Classification**: Uses AI to categorize content and tag with relevant vibes
-- **Smart Ranking**: Scores items based on originality, social proof, freshness, and accessibility
-- **Personalized Curation**: Generates themed day plans and interactive maps
+- **scraper.py**: Scrapes events from blogs, newsletters, and websites.
+- **find_reddit_cultural_events.py**: Searches Reddit for cultural events in NYC.
+- **combine_summaries.py**: Combines the latest outputs from the scraper and Reddit finder into a single markdown summary.
+- **email_combined_summary.py**: Emails the latest combined markdown summary as an attachment.
+- **run_full_workflow.py**: Automates the entire workflow by running all scripts in sequence.
 
 ## Setup
 
-1. Clone the repository
-2. Install dependencies:
+1. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
-3. Create a `.env` file with your API keys:
+
+2. Configure environment variables in a `.env` file:
    ```
    REDDIT_CLIENT_ID=your_reddit_client_id
    REDDIT_CLIENT_SECRET=your_reddit_client_secret
-   REDDIT_USER_AGENT=your_user_agent
-   INSTAGRAM_ACCESS_TOKEN=your_instagram_token
-   INSTAGRAM_CLIENT_ID=your_instagram_client_id
-   INSTAGRAM_CLIENT_SECRET=your_instagram_client_secret
-   EVENTBRITE_API_KEY=your_eventbrite_key
-   OPENAI_API_KEY=your_openai_key
+   REDDIT_USER_AGENT=your_reddit_user_agent
+   EMAIL_ADDRESS=your_email@gmail.com
+   EMAIL_PASSWORD=your_app_password
+   TO_ADDRESS=recipient_email@gmail.com
    ```
+
+   For Gmail, you'll need an [App Password](https://support.google.com/accounts/answer/185833) if 2FA is enabled.
 
 ## Usage
 
-Run the main script:
-```bash
-python main.py
-```
+- **Run the full workflow**:
+  ```bash
+  python run_full_workflow.py
+  ```
 
-The script will:
-1. Scrape data from various sources
-2. Classify and rank the items
-3. Generate recommendations
-4. Save results to a JSON file
+- **Run individual scripts**:
+  ```bash
+  python scraper.py
+  python find_reddit_cultural_events.py
+  python combine_summaries.py
+  python email_combined_summary.py
+  ```
 
 ## Output
 
-The results are saved in a JSON file with the following structure:
-```json
-{
-  "timestamp": "2024-03-04T12:00:00",
-  "total_items": 100,
-  "ranked_items": [...],
-  "recommendations": {
-    "morning": {...},
-    "afternoon": {...},
-    "evening": {...},
-    "map": {...}
-  }
-}
-```
+- **JSON files**: Raw event data from each source.
+- **Markdown files**: Summaries of events, combined and emailed.
 
-## Customization
+## Notes
 
-You can modify the following files to customize the agent:
-- `config.py`: Adjust scraping parameters, categories, and weights
-- `scraper.py`: Add new data sources
-- `classifier.py`: Modify classification criteria
-- `ranker.py`: Adjust ranking algorithms
-- `curator.py`: Change recommendation generation
-
-## Contributing
-
-Feel free to submit issues and enhancement requests! 
+- The workflow stops if any script fails.
+- The latest combined markdown file is emailed as an attachment. 

@@ -23,6 +23,31 @@ EVENTBRITE_CONFIG = {
     'api_key': os.getenv('EVENTBRITE_API_KEY')
 }
 
+# Newsletter Configuration
+NEWSLETTER_CONFIG = {
+    'sources': {
+        'the_skint': {
+            'url': 'https://theskint.com',
+            'type': 'blog',
+            'category': 'daily',
+            'article_selector': '.post'
+        },
+        'coolstuffnyc': {
+            'url': 'https://coolstuffnyc.substack.com',
+            'type': 'substack',
+            'category': 'events',
+            'rss_url': 'https://coolstuffnyc.substack.com/feed'
+        }
+    },
+    'scraping': {
+        'max_articles': 10,
+        'date_range_days': 7,
+        'min_content_length': 100,
+        'request_timeout': 10,
+        'selenium_wait_time': 10
+    }
+}
+
 # OpenAI Configuration
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
